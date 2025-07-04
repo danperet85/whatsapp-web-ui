@@ -3,7 +3,7 @@ import { useEffect, useRef } from "react";
 export default function useScrollToBottom(
   callback: Function,
   shouldScrollToBottom?: boolean,
-  chatId?: string
+  chatId?: string,
 ) {
   const containerRef = useRef(null);
   const lastMessageRef = useRef(null);
