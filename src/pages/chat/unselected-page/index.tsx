@@ -1,6 +1,7 @@
 import ChatLayout from "../layouts";
 import Icon from "common/components/icons";
 import { useAppTheme } from "common/theme";
+import { Link as RouterLink } from "react-router-dom";
 import { Container, ImageWrapper, Title, IconWrapper, Link, Image, Text } from "./styles";
 
 export default function UnSelectedChatPage() {
@@ -30,6 +31,9 @@ export default function UnSelectedChatPage() {
           <IconWrapper>
             <Icon id="heart" />
           </IconWrapper>
+        </Text>
+        <Text>
+          <RouterLink to="/config">Configuration</RouterLink>
         </Text>
       </Container>
     </ChatLayout>
