@@ -18,8 +18,20 @@ const attachButtons = [
   { icon: "attachImage", label: "Choose image" },
 ];
 
-export default function Footer() {
+type FooterProps = {
+  onSendMessage?: (text: string) => void;
+};
+
+export default function Footer(props: FooterProps) {
+  const { onSendMessage } = props;
   const [showIcons, setShowIcons] = useState(false);
+  const [text, setText] = useState("");
+
+  const handleSend = () => {
+    if (!text.trim()) return;
+    if (onSendMessage) onSendMessage(text);
+    setText("");
+  };
 
   return (
     <Wrapper>
@@ -35,8 +47,12 @@ export default function Footer() {
           ))}
         </ButtonsContainer>
       </IconsWrapper>
-      <Input placeholder="Type a message here .." />
-      <SendMessageButton>
+      <Input
+        placeholder="Type a message here .."
+        value={text}
+        onChange={(e) => setText(e.target.value)}
+      />
+      <SendMessageButton onClick={handleSend}>
         <Icon id="send" className="icon" />
       </SendMessageButton>
     </Wrapper>

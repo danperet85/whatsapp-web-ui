@@ -8,6 +8,10 @@ import ProfileSection from "./components/profile";
 import MessagesList from "./components/messages-list";
 import SearchSection from "./components/search-section";
 import useNavigateToChat from "./hooks/useNavigateToChat";
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import { getMessages, Message } from "./components/messages-list/data/get-messages";
+import { sendMessage as apiSendMessage } from "../../services/whatsappApi";
 import { Container, Body, Background, FooterContainer, ScrollButton } from "./styles";
 
 export default function ChatRoomPage() {
@@ -25,6 +29,27 @@ export default function ChatRoomPage() {
   } = useChatRoom();
   useNavigateToChat(activeInbox);
 
+  const params = useParams();
+  const [messages, setMessages] = useState<Message[]>([]);
+
+  useEffect(() => {
+    if (params.id) {
+      getMessages(params.id).then(setMessages).catch(console.error);
+    }
+  }, [params.id]);
+
+  const handleSendMessage = async (text: string) => {
+    if (!params.id) return;
+
+    try {
+      const newMsg = await apiSendMessage(params.id, { text });
+      setMessages((prev) => [...prev, newMsg]);
+      setShouldScrollToBottom(true);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   return (
     <ChatLayout>
       <Container>
@@ -38,6 +63,7 @@ export default function ChatRoomPage() {
             onProfileClick={() => handleMenuOpen("profile")}
           />
           <MessagesList
+            messages={messages}
             onShowBottomIcon={handleShowIcon}
             shouldScrollToBottom={shouldScrollToBottom}
           />
@@ -47,7 +73,7 @@ export default function ChatRoomPage() {
                 <Icon id="downArrow" />
               </ScrollButton>
             )}
-            <Footer />
+            <Footer onSendMessage={handleSendMessage} />
           </FooterContainer>
         </Body>
         <Sidebar title="Search" isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)}>

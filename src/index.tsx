@@ -12,5 +12,5 @@ root.render(
     <Suspense fallback={<MainPageLoader />}>
       <App />
     </Suspense>
-  </AppThemeProvider>
+  </AppThemeProvider>,
 );
